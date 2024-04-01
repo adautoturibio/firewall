@@ -29,5 +29,20 @@ iptables -A FORWARD -d www.jogosonline.com.br -j DROP
 iptables -A INPUT -p icmp --icmp-type echo-request -m recent --set --name PING_CHECK
 iptables -A INPUT -p icmp --icmp-type echo-request -m recent --update --seconds 1 --hitcount 5 --name PING_CHECK -j DROP
 
+# VII.
+iptables -A FORWARD -s 10.1.1.0/24 -p udp --dport 53 -j ACCEPT
+iptables -A FORWARD -s 192.168.1.0/24 -p udp --dport 53 -j ACCEPT
+
+iptables -A FORWARD -d 10.1.1.0/24 -p udp --sport 53 -j ACCEPT
+iptables -A FORWARD -d 192.168.1.0/24 -p udp --sport 53 -j ACCEPT
+
 # VIII.
+iptables -A FORWARD -d 192.168.1.100 -p tcp --dport 80 -j ACCEPT
+
+# IX.
+iptables -t nat -A PREROUTING -d 200.20.5.1 -p tcp --dport 80 -j DNAT --to-destination 192.168.1.100:80
+iptables -A FORWARD -d 192.168.1.100 -p tcp --dport 80 -j ACCEPT
+
+# X.
+iptables -t nat -A PREROUTING -d 200.20.5.1 -p tcp --dport 80 -j DNAT --to-destination 192.168.1.100:80
 iptables -A FORWARD -d 192.168.1.100 -p tcp --dport 80 -j ACCEPT
