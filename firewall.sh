@@ -20,3 +20,14 @@ iptables -A INPUT -i eth0 -p tcp --dport 443 -j ACCEPT
 # IV.
 iptables -A FORWARD -m string --string "games" --algo kmp -j LOG --log-prefix "Blocked: "
 iptables -A FORWARD -m string --string "games" --algo kmp -j DROP
+
+# V.
+iptables -A FORWARD -d www.jogosonline.com.br -s 10.1.1.100 -j ACCEPT
+iptables -A FORWARD -d www.jogosonline.com.br -j DROP
+
+# VI.
+iptables -A INPUT -p icmp --icmp-type echo-request -m recent --set --name PING_CHECK
+iptables -A INPUT -p icmp --icmp-type echo-request -m recent --update --seconds 1 --hitcount 5 --name PING_CHECK -j DROP
+
+# VIII.
+iptables -A FORWARD -d 192.168.1.100 -p tcp --dport 80 -j ACCEPT
